@@ -1,5 +1,5 @@
-import React from "react";
+import ChooseMath from "../components/Options/ChooseMath";
 
 export default function Options() {
-  return <h1>Options Page</h1>;
+  return <ChooseMath />;
 }

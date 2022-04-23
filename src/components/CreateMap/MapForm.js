@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createMapActions } from "../../store/CreateMapSlice";
 
 const initialName = localStorage.getItem("createdName") || "";
@@ -10,7 +10,8 @@ export default function MapForm() {
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState(initialDescription);
 
-  console.log(localStorage.getItem("createdName"));
+  const mapData = useSelector((state) => state.createMap.mapData);
+  const unitPosition = useSelector((state) => state.createMap.unitPosition);
 
   useEffect(() => {
     let timeout = setTimeout(() => {
@@ -39,7 +40,7 @@ export default function MapForm() {
   };
 
   const handleCancel = (event) => {
-    event.preventDefault();
+    event?.preventDefault();
     dispatch(createMapActions.clearData());
     setName("");
     setDescription("");
@@ -47,8 +48,57 @@ export default function MapForm() {
     localStorage.removeItem("createdDescription");
   };
 
+  const countMath = (array) => {
+    let count = 0;
+    array.forEach((element) => {
+      element.forEach((value) => {
+        if (value === 3) {
+          count++;
+        }
+      });
+    });
+    return count;
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    // FORM VALIDATION GOES HERE
+    // CHECK FOR DUPLICATES IN FIREBASE
+    // INITIALIZE "LOADING"
+
+    const mathCount = countMath(mapData);
+
+    const body = {
+      name: name,
+      description: description,
+      size: [11, 11],
+      mapData: mapData,
+      unitPosition: unitPosition,
+      mathCount: mathCount,
+    };
+
+    fetch(
+      "https://math-maze-a939f-default-rtdb.europe-west1.firebasedatabase.app/maps.json",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          alert("Map saved successfully"); // CREATE AND USE MODAL
+          handleCancel();
+        } else {
+          alert("Something went wrong..."); //  CREATE AND USE MODAL
+        }
+      })
+      .catch((error) => alert("Error: " + error?.message)); // CREATE AND USE MODAL
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="mb-3">
         <label htmlFor="name" className="form-label">
           Map name
