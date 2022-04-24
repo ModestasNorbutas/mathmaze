@@ -2,9 +2,11 @@ import { useNavigate } from "react-router-dom";
 import Card from "../components/UI/Card";
 import styles from "./Home.module.scss";
 import { useSelector } from "react-redux";
+import useRandomMap from "../components/Services/useRandomMap";
 
 export default function Home() {
   const navigate = useNavigate();
+  const playRandom = useRandomMap();
   const isPlay = useSelector((state) => state.play.isPlay);
 
   return (
@@ -18,7 +20,9 @@ export default function Home() {
             Continue play
           </button>
         )}
-        <button className="btn btn-primary m-2">Play random map</button>
+        <button className="btn btn-primary m-2" onClick={() => playRandom()}>
+          Play random map
+        </button>
         <button
           className="btn btn-primary m-2"
           onClick={() => navigate("/maplist")}

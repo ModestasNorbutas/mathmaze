@@ -67,10 +67,10 @@ const initialUnitPosition =
   JSON.parse(localStorage.getItem("unitPosition")) || {};
 
 const initialState = {
-  isPlay: localStorage.getItem("isPlay") || false,
+  isPlay: localStorage.getItem("isPlay") === "true" ? true : false,
   action: "move",
-  initialMathCount: localStorage.getItem("initialMathCount") || 0,
-  mathCount: localStorage.getItem("mathCount") || 0,
+  initialMathCount: +localStorage.getItem("initialMathCount") || 0,
+  mathCount: +localStorage.getItem("mathCount") || 0,
   mapData: initialMapData,
   activeMap: revealMap(initialMapData, initialUnitPosition),
   unitPosition: initialUnitPosition,
@@ -96,7 +96,7 @@ const playSlice = createSlice({
         action.payload.mapData,
         action.payload.unitPosition
       );
-      localStorage.setItem("isPlay", true);
+      localStorage.setItem("isPlay", "true");
       localStorage.setItem("initialMathCount", action.payload.mathCount);
       localStorage.setItem("mathCount", action.payload.mathCount);
       localStorage.setItem("mapData", JSON.stringify(action.payload.mapData));
@@ -107,92 +107,83 @@ const playSlice = createSlice({
     },
 
     move(state, action) {
-      if (state.action === "move") {
-        const r = state.unitPosition.row;
-        const c = state.unitPosition.col;
-        if (action.payload === 37) {
-          // Move left
-          if (
-            state.mapData[r]?.[c - 1] !== undefined &&
-            state.mapData[r]?.[c - 1] !== 1
-          ) {
-            state.unitPosition.col--;
-          }
-        } else if (action.payload === 38) {
-          // Move up
-          if (
-            state.mapData?.[r - 1]?.[c] !== undefined &&
-            state.mapData?.[r - 1]?.[c] !== 1
-          ) {
-            state.unitPosition.row--;
-          }
-        } else if (action.payload === 39) {
-          // Move right
-          if (
-            state.mapData[r]?.[c + 1] !== undefined &&
-            state.mapData[r]?.[c + 1] !== 1
-          ) {
-            state.unitPosition.col++;
-          }
-        } else if (action.payload === 40) {
-          // Move down
-          if (
-            state.mapData?.[r + 1]?.[c] !== undefined &&
-            state.mapData?.[r + 1]?.[c] !== 1
-          ) {
-            state.unitPosition.row++;
-          }
-        }
-        state.activeMap = revealMap(state.mapData, state.unitPosition);
-        localStorage.setItem(
-          "unitPosition",
-          JSON.stringify(state.unitPosition)
-        );
+      const r = state.unitPosition.row;
+      const c = state.unitPosition.col;
+      if (action.payload === 37) {
+        // Move left
         if (
-          state.mapData[state.unitPosition.row][state.unitPosition.col] === 3
+          state.mapData[r]?.[c - 1] !== undefined &&
+          state.mapData[r]?.[c - 1] !== 1
         ) {
-          // Activate math
-          state.action = "math";
-          const randomIndex = Math.floor(
-            Math.random() * state.chosenMath.length
-          );
-          state.mathProblem = state.chosenMath[randomIndex].problem;
-          state.correctAnswer = state.chosenMath[randomIndex].solution;
+          state.unitPosition.col--;
         }
+      } else if (action.payload === 38) {
+        // Move up
         if (
-          state.mapData[state.unitPosition.row][state.unitPosition.col] === 4
+          state.mapData?.[r - 1]?.[c] !== undefined &&
+          state.mapData?.[r - 1]?.[c] !== 1
         ) {
-          // Activate exit
-          state.action = "exit";
+          state.unitPosition.row--;
+        }
+      } else if (action.payload === 39) {
+        // Move right
+        if (
+          state.mapData[r]?.[c + 1] !== undefined &&
+          state.mapData[r]?.[c + 1] !== 1
+        ) {
+          state.unitPosition.col++;
+        }
+      } else if (action.payload === 40) {
+        // Move down
+        if (
+          state.mapData?.[r + 1]?.[c] !== undefined &&
+          state.mapData?.[r + 1]?.[c] !== 1
+        ) {
+          state.unitPosition.row++;
+        }
+      }
+      state.activeMap = revealMap(state.mapData, state.unitPosition);
+      localStorage.setItem("unitPosition", JSON.stringify(state.unitPosition));
+      if (state.mapData[state.unitPosition.row][state.unitPosition.col] === 3) {
+        // Activate math
+        state.action = "math";
+        const randomIndex = Math.floor(Math.random() * state.chosenMath.length);
+        state.mathProblem = state.chosenMath[randomIndex].problem;
+        state.correctAnswer = state.chosenMath[randomIndex].solution;
+      }
+      if (state.mapData[state.unitPosition.row][state.unitPosition.col] === 4) {
+        // Activate exit
+        state.action = "exit";
+        if (state.mathCount === 0) {
+          localStorage.setItem("isPlay", "false");
         }
       }
     },
 
     type(state, action) {
-      if (state.action === "math") {
-        if (state.chosenAnswer === "0") {
-          state.chosenAnswer = "" + action.payload;
-        } else {
-          state.chosenAnswer += action.payload;
-        }
+      if (state.chosenAnswer === "0") {
+        state.chosenAnswer = "" + action.payload;
+      } else {
+        state.chosenAnswer += action.payload;
       }
     },
 
     enter(state) {
-      if (state.action === "math") {
-        if (state.correctAnswer === +state.chosenAnswer) {
-          state.mapData[state.unitPosition.row][state.unitPosition.col] = 0;
-          state.activeMap[state.unitPosition.row][state.unitPosition.col] = 0;
-          state.mathCount--;
-          state.action = "move";
-          state.chosenAnswer = "";
-        } else {
-          state.isIncorrect = true;
-        }
-      }
-      if (state.action === "exit") {
+      if (state.correctAnswer === +state.chosenAnswer) {
+        state.mapData[state.unitPosition.row][state.unitPosition.col] = 0;
+        localStorage.setItem("mapData", JSON.stringify(state.mapData));
+        state.activeMap[state.unitPosition.row][state.unitPosition.col] = 0;
+        state.mathCount--;
+        localStorage.setItem("mathCount", state.mathCount);
         state.action = "move";
+        state.chosenAnswer = "";
+      } else {
+        state.isIncorrect = true;
       }
+    },
+
+    continue(state) {
+      state.action = "move";
     },
 
     setCorrect(state) {
@@ -200,9 +191,10 @@ const playSlice = createSlice({
     },
 
     delete(state) {
-      if (state.action === "math") {
-        state.chosenAnswer = "";
-      }
+      state.chosenAnswer = "";
+    },
+    changeChosenMath(state) {
+      state.chosenMath = initializeChosenMath();
     },
   },
 });

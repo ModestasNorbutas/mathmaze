@@ -3,13 +3,14 @@ import MapCell from "./MapCell";
 import { useSelector } from "react-redux";
 import Math from "./Math";
 import Exit from "./Exit";
+import Grid from "../UI/Grid";
 
 export default function MapGrid(props) {
   const activeMap = useSelector((state) => state.play.activeMap);
   const action = useSelector((state) => state.play.action);
 
   return (
-    <div className={styles["map-grid"] + " " + props.className}>
+    <Grid>
       {activeMap.map((row, rowIndex) => (
         <div className={styles.row} key={rowIndex}>
           {row.map((col, colIndex) => (
@@ -21,6 +22,6 @@ export default function MapGrid(props) {
         {action === "math" && <Math />}
         {action === "exit" && <Exit />}
       </div>
-    </div>
+    </Grid>
   );
 }

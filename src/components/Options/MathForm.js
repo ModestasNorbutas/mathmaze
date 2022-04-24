@@ -1,15 +1,19 @@
 import { useDispatch } from "react-redux";
 import { chooseMathActions } from "../../store/ChooseMathSlice";
+import { playActions } from "../../store/PlaySlice";
 
 export default function MathForm() {
   const dispatch = useDispatch();
 
   const handleSave = () => {
     dispatch(chooseMathActions.confirm());
+    dispatch(playActions.changeChosenMath());
+    alert("Math choices saved!"); // CREATE AND USE MODAL
   };
 
   const handleCancel = () => {
     dispatch(chooseMathActions.cancel());
+    alert("Restored previous choices"); // CREATE AND USE MODAL
   };
 
   return (
