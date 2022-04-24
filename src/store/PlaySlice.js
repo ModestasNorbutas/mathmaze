@@ -9,7 +9,7 @@ const initializeChosenMath = () => {
         if (mathGrid[r][c].isOn) {
           let problem = `${r} x ${c}`;
           let solution = r * c;
-          chosenMath.push(problem, solution);
+          chosenMath.push({ problem, solution });
         }
       }
     }
@@ -19,7 +19,7 @@ const initializeChosenMath = () => {
       for (let c = 1; c < 11; c++) {
         let problem = `${r} x ${c}`;
         let solution = r * c;
-        chosenMath.push(problem, solution);
+        chosenMath.push({ problem, solution });
       }
     }
     return chosenMath;
@@ -68,13 +68,17 @@ const initialUnitPosition =
 
 const initialState = {
   isPlay: localStorage.getItem("isPlay") || false,
-  action: localStorage.getItem("action") || "move",
+  action: "move",
   initialMathCount: localStorage.getItem("initialMathCount") || 0,
   mathCount: localStorage.getItem("mathCount") || 0,
   mapData: initialMapData,
   activeMap: revealMap(initialMapData, initialUnitPosition),
   unitPosition: initialUnitPosition,
   chosenMath: initializeChosenMath(),
+  mathProblem: "",
+  correctAnswer: "",
+  chosenAnswer: "",
+  isIncorrect: false,
 };
 
 const playSlice = createSlice({
@@ -93,7 +97,6 @@ const playSlice = createSlice({
         action.payload.unitPosition
       );
       localStorage.setItem("isPlay", true);
-      localStorage.setItem("action", "move");
       localStorage.setItem("initialMathCount", action.payload.mathCount);
       localStorage.setItem("mathCount", action.payload.mathCount);
       localStorage.setItem("mapData", JSON.stringify(action.payload.mapData));
@@ -145,19 +148,61 @@ const playSlice = createSlice({
           "unitPosition",
           JSON.stringify(state.unitPosition)
         );
+        if (
+          state.mapData[state.unitPosition.row][state.unitPosition.col] === 3
+        ) {
+          // Activate math
+          state.action = "math";
+          const randomIndex = Math.floor(
+            Math.random() * state.chosenMath.length
+          );
+          state.mathProblem = state.chosenMath[randomIndex].problem;
+          state.correctAnswer = state.chosenMath[randomIndex].solution;
+        }
+        if (
+          state.mapData[state.unitPosition.row][state.unitPosition.col] === 4
+        ) {
+          // Activate exit
+          state.action = "exit";
+        }
       }
     },
 
     type(state, action) {
-      console.log(action.payload);
+      if (state.action === "math") {
+        if (state.chosenAnswer === "0") {
+          state.chosenAnswer = "" + action.payload;
+        } else {
+          state.chosenAnswer += action.payload;
+        }
+      }
     },
 
-    enter(state, action) {
-      console.log("enter");
+    enter(state) {
+      if (state.action === "math") {
+        if (state.correctAnswer === +state.chosenAnswer) {
+          state.mapData[state.unitPosition.row][state.unitPosition.col] = 0;
+          state.activeMap[state.unitPosition.row][state.unitPosition.col] = 0;
+          state.mathCount--;
+          state.action = "move";
+          state.chosenAnswer = "";
+        } else {
+          state.isIncorrect = true;
+        }
+      }
+      if (state.action === "exit") {
+        state.action = "move";
+      }
     },
 
-    delete(state, action) {
-      console.log("delete");
+    setCorrect(state) {
+      state.isIncorrect = false;
+    },
+
+    delete(state) {
+      if (state.action === "math") {
+        state.chosenAnswer = "";
+      }
     },
   },
 });

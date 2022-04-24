@@ -13,13 +13,13 @@ export default function PlayMap() {
         e.preventDefault();
         dispatch(playActions.move(e.keyCode));
       } else if (e.keyCode >= 96 && e.keyCode <= 105) {
-        dispatch(playActions.type({ number: e.keyCode - 96, event: e }));
+        dispatch(playActions.type(e.keyCode - 96));
       } else if (e.keyCode >= 48 && e.keyCode <= 57) {
-        dispatch(playActions.type({ number: e.keyCode - 48, event: e }));
+        dispatch(playActions.type(e.keyCode - 48));
       } else if (e.keyCode === 13) {
-        dispatch(playActions.enter(e));
+        dispatch(playActions.enter());
       } else if (e.keyCode === 8 || e.keyCode === 46 || e.keyCode === 109) {
-        dispatch(playActions.delete(e));
+        dispatch(playActions.delete());
       }
     },
     [dispatch]

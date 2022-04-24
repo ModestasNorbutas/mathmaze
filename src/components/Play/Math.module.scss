@@ -1,0 +1,25 @@
+@import "../../styles/colors.scss";
+
+.problem,
+.answer {
+  height: 3rem;
+  min-width: 200px;
+  max-width: 100%;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+}
+
+.problem {
+  background-color: $color-muted;
+}
+
+.answer {
+  background-color: $color-green;
+}
+
+.red {
+  background-color: $color-red;
+}
