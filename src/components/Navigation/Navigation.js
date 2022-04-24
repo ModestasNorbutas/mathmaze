@@ -59,6 +59,16 @@ export default function Navigation() {
               <NavLink
                 className="nav-link"
                 aria-current="page"
+                to="/maplist"
+                onClick={collapseNavigation}
+              >
+                Map List
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                className="nav-link"
+                aria-current="page"
                 to="/options"
                 onClick={collapseNavigation}
               >

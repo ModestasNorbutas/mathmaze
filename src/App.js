@@ -7,6 +7,7 @@ import Loading from "./components/UI/Loading";
 const Play = React.lazy(() => import("./pages/Play"));
 const Options = React.lazy(() => import("./pages/Options"));
 const CreateMap = React.lazy(() => import("./pages/CreateMap"));
+const MapList = React.lazy(() => import("./pages/MapList"));
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/play" element={<Play />} />
+          <Route path="/maplist" element={<MapList />} />
           <Route path="/options" element={<Options />} />
           <Route path="/create" element={<CreateMap />} />
           <Route path="*" element={<Navigate replace to="/home" />} />

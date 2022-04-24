@@ -23,22 +23,6 @@ const initializeMathGrid = () => {
   }
 };
 
-// const initializeChosenMath = () => {
-//   if (localStorage.getItem("chosenMath")) {
-//     return JSON.parse(localStorage.getItem("chosenMath"));
-//   } else {
-//     let chosenMath = new Map();
-//     for (let r = 1; r < 11; r++) {
-//       for (let c = 1; c < 11; c++) {
-//         let problem = `${r} x ${c}`;
-//         let solution = r * c;
-//         chosenMath.set(problem, solution);
-//       }
-//     }
-//     return chosenMath;
-//   }
-// };
-
 const initialState = {
   mathGrid: initializeMathGrid(),
   // chosenMath: initializeChosenMath(),
