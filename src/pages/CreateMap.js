@@ -1,12 +1,17 @@
 import React from "react";
 import Card from "../components/UI/Card";
+import Grid from "../components/UI/Grid";
+import MapTools from "../components/CreateMap/MapTools";
 import MapForm from "../components/CreateMap/MapForm";
-import MapCreator from "../components/CreateMap/MapCreator";
+import { useSelector } from "react-redux";
 
 export default function CreateMap() {
+  const mapData = useSelector((state) => state.createMap.mapData);
+
   return (
     <Card>
-      <MapCreator className="mb-3" />
+      <Grid data={mapData} type="create" />
+      <MapTools />
       <MapForm />
     </Card>
   );

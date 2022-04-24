@@ -98,7 +98,7 @@ export default function MapForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="mt-3">
       <div className="mb-3">
         <label htmlFor="name" className="form-label">
           Map name

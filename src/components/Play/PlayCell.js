@@ -1,12 +1,12 @@
 import React from "react";
-import styles from "./MapCell.module.scss";
+import styles from "./PlayCell.module.scss";
 import unit from "../../images/woman.png";
 import wall from "../../images/wall.png";
 import math from "../../images/math.png";
 import exit from "../../images/exit.png";
 import { useSelector } from "react-redux";
 
-export default function MapCell(props) {
+export default function PlayCell(props) {
   let cellContent;
   switch (props.value) {
     case 0:

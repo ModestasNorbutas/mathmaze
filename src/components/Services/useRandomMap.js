@@ -7,6 +7,7 @@ export default function useRandomMap() {
   const navigate = useNavigate();
 
   const playRandom = () => {
+    // USE LOADING
     fetch(
       "https://math-maze-a939f-default-rtdb.europe-west1.firebasedatabase.app/maps.json"
     )
@@ -26,7 +27,7 @@ export default function useRandomMap() {
       .then(() => {
         navigate("/play");
       })
-      .catch((error) => alert("Error: " + error?.message));
+      .catch((error) => alert("Error: " + error?.message)); // CREATE AND USE MODAL
   };
 
   return playRandom;

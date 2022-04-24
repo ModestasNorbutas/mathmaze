@@ -1,11 +1,15 @@
 import { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Card from "../UI/Card";
-import MapGrid from "./MapGrid";
 import { playActions } from "../../store/PlaySlice";
+import styles from "./PlayMap.module.scss";
+import Card from "../UI/Card";
+import Grid from "../UI/Grid";
+import Math from "./Math";
+import Exit from "./Exit";
 
 export default function PlayMap() {
   const dispatch = useDispatch();
+  const activeMap = useSelector((state) => state.play.activeMap);
   const action = useSelector((state) => state.play.action);
 
   const handleKeypress = useCallback(
@@ -43,7 +47,12 @@ export default function PlayMap() {
 
   return (
     <Card>
-      <MapGrid />
+      <Grid data={activeMap} type="play">
+        <div className={styles.popup}>
+          {action === "math" && <Math />}
+          {action === "exit" && <Exit />}
+        </div>
+      </Grid>
     </Card>
   );
 }

@@ -7,7 +7,7 @@ import exit from "../../images/exit.png";
 import { useDispatch, useSelector } from "react-redux";
 import { createMapActions } from "../../store/CreateMapSlice";
 
-export default function MapCell(props) {
+export default function CreateCell(props) {
   const dispatch = useDispatch();
 
   let cellContent;
