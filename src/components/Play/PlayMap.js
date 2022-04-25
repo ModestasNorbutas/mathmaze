@@ -6,6 +6,8 @@ import Card from "../UI/Card";
 import Grid from "../UI/Grid";
 import Math from "./Math";
 import Exit from "./Exit";
+import PlayCell from "./PlayCell";
+import Keyboard from "./Keyboard";
 
 export default function PlayMap() {
   const dispatch = useDispatch();
@@ -47,12 +49,13 @@ export default function PlayMap() {
 
   return (
     <Card>
-      <Grid data={activeMap} type="play">
+      <Grid data={activeMap} cell={PlayCell}>
         <div className={styles.popup}>
           {action === "math" && <Math />}
           {action === "exit" && <Exit />}
         </div>
       </Grid>
+      <Keyboard />
     </Card>
   );
 }

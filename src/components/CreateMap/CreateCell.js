@@ -9,6 +9,7 @@ import { createMapActions } from "../../store/CreateMapSlice";
 
 export default function CreateCell(props) {
   const dispatch = useDispatch();
+  const isMouseDown = useSelector((state) => state.createMap.isMouseDown);
 
   let cellContent;
   switch (props.value) {
@@ -32,9 +33,26 @@ export default function CreateCell(props) {
     dispatch(createMapActions.changeTile({ row: props.row, col: props.col }));
   };
 
-  const handleClear = (event) => {
-    event.preventDefault();
+  const handleClear = () => {
     dispatch(createMapActions.clearTile({ row: props.row, col: props.col }));
+  };
+
+  const handleMouseDown = (event) => {
+    event.preventDefault();
+    dispatch(createMapActions.mouseDown(event.button));
+    if (event.button === 0) {
+      handleClick();
+    } else if (event.button === 2) {
+      handleClear();
+    }
+  };
+
+  const handleMouseEnter = () => {
+    if (isMouseDown.left) {
+      handleClick();
+    } else if (isMouseDown.right) {
+      handleClear();
+    }
   };
 
   const unitPosition = useSelector((state) => state.createMap.unitPosition);
@@ -45,8 +63,9 @@ export default function CreateCell(props) {
   return (
     <div
       className={styles["map-cell"]}
-      onClick={handleClick}
-      onContextMenu={handleClear}
+      onMouseDown={(e) => handleMouseDown(e)}
+      onMouseEnter={handleMouseEnter}
+      onContextMenu={(e) => e.preventDefault()}
     >
       {cellContent}
       {isUnit && <img className={styles.unit} src={unit} alt="unit" />}

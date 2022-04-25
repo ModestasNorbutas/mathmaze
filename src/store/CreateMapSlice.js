@@ -6,6 +6,7 @@ const initialState = {
     Array.from(Array(11), () => new Array(11).fill(1)),
   unitPosition: JSON.parse(localStorage.getItem("createdPosition")) || null,
   selected: +localStorage.getItem("selected") || 0,
+  isMouseDown: { left: false, right: false },
 };
 
 const createMapSlice = createSlice({
@@ -53,6 +54,20 @@ const createMapSlice = createSlice({
       localStorage.removeItem("createdPosition");
       state.unitPosition = null;
       state.mapData = Array.from(Array(11), () => new Array(11).fill(1));
+    },
+
+    mouseDown(state, action) {
+      if (action.payload === 0) {
+        state.isMouseDown.left = true;
+      }
+      if (action.payload === 2) {
+        state.isMouseDown.right = true;
+      }
+    },
+
+    mouseUp(state) {
+      state.isMouseDown.left = false;
+      state.isMouseDown.right = false;
     },
   },
 });

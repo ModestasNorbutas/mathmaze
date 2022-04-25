@@ -1,23 +1,7 @@
 import styles from "./Grid.module.scss";
-import CreateCell from "../CreateMap/CreateCell";
-import MathCell from "../Options/MathCell";
-import PlayCell from "../Play/PlayCell";
 
 export default function Grid(props) {
-  let Cell;
-  switch (props.type) {
-    case "create":
-      Cell = CreateCell;
-      break;
-    case "math":
-      Cell = MathCell;
-      break;
-    case "play":
-      Cell = PlayCell;
-      break;
-    default:
-      Cell = <div>Error</div>;
-  }
+  const Cell = props.cell;
 
   return (
     <div className={styles.outer + " " + props.className}>
@@ -31,7 +15,6 @@ export default function Grid(props) {
         ))}
         {props.children}
       </div>
-      ;
     </div>
   );
 }
