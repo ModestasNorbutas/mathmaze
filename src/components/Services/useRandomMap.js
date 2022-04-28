@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { playActions } from "../../store/PlaySlice";
+import { alertActions } from "../../store/AlertSlice";
 import { useNavigate } from "react-router-dom";
 
 export default function useRandomMap() {
@@ -27,7 +28,15 @@ export default function useRandomMap() {
       .then(() => {
         navigate("/play");
       })
-      .catch((error) => alert("Error: " + error?.message)); // CREATE AND USE MODAL
+      .catch((error) =>
+        dispatch(
+          alertActions.alert({
+            header: "Error",
+            message: error?.message,
+            button: "OK",
+          })
+        )
+      );
   };
 
   return playRandom;

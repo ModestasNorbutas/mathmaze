@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navigation from "./components/Navigation/Navigation";
 import Home from "./pages/Home";
 import Loading from "./components/UI/Loading";
+import Alert from "./components/UI/Alert";
 
 const Play = React.lazy(() => import("./pages/Play"));
 const Options = React.lazy(() => import("./pages/Options"));
@@ -12,6 +13,7 @@ const MapList = React.lazy(() => import("./pages/MapList"));
 export default function App() {
   return (
     <BrowserRouter>
+      <Alert />
       <Navigation />
       <Suspense fallback={<Loading />}>
         <Routes>
